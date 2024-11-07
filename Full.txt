@@ -1,0 +1,97 @@
+// package.json
+{
+  "name": "apollon-pharmacy",
+  "version": "1.0.0",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.263.1",
+    "tailwindcss": "^3.3.0",
+    "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-popover": "^1.0.0",
+    "@radix-ui/react-toast": "^1.0.0"
+  }
+}
+
+// src/components/Layout/index.jsx
+export { default as ApollonHeader } from './ApollonHeader';
+export { default as SidebarMenu } from './SidebarMenu';
+export { default as MainContent } from './MainContent';
+
+// src/styles/globals.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors;
+  }
+  .input-search {
+    @apply w-full px-4 py-2 bg-white/10 rounded-lg text-white placeholder-blue-100;
+  }
+}
+
+// tailwind.config.js
+module.exports = {
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        apollo: {
+          50: '#f5f7ff',
+          100: '#ebf0ff',
+          500: '#4f46e5',
+          600: '#4338ca',
+          700: '#3730a3'
+        }
+      }
+    }
+  },
+  plugins: []
+}
+
+// src/context/AppContext.jsx
+import { createContext, useContext, useState } from 'react';
+
+export const AppContext = createContext();
+
+export function AppProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [activePharma, setActivePharma] = useState(null);
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <AppContext.Provider value={{
+      user,
+      setUser,
+      activePharma,
+      setActivePharma,
+      theme,
+      setTheme
+    }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
+
+export function useApp() {
+  return useContext(AppContext);
+}
+
+// src/main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { AppProvider } from './context/AppContext';
+import './styles/globals.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <AppProvider>
+      <App />
+    </AppProvider>
+  </React.StrictMode>
+);
